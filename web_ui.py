@@ -1,8 +1,10 @@
+import os
+import threading
 from flask import Flask, request, redirect, url_for, render_template_string
 from darts_engine import DartsEngine
 
 app = Flask(__name__)
-engine = DartsEngine(mode=DartsEngine.MODE_TEST)
+engine = DartsEngine()
 
 HTML = """
 <!doctype html>
@@ -69,7 +71,7 @@ button.reset {
 <body>
 <div class="container">
 
-    <h1>Remaining: {{ remaining }}</h1>
+    <h1>Remaining: <span id="remaining">{{ remaining }}</span></h1>
 
     <div class="section">
         <form method="post" action="/set_remaining">
@@ -102,14 +104,53 @@ button.reset {
     </div>
 
 </div>
+
+<script>
+async function refreshState() {
+    try {
+        const response = await fetch('/state', { cache: 'no-store' });
+        if (!response.ok) return;
+        const data = await response.json();
+        const remainingEl = document.getElementById('remaining');
+        if (remainingEl && typeof data.remaining === 'number') {
+            remainingEl.textContent = data.remaining;
+        }
+    } catch (_) {
+        // no-op: keep previous value
+    }
+}
+
+setInterval(refreshState, 400);
+refreshState();
+</script>
+
 </body>
 </html>
 """
+
+def _start_engine_polling():
+    try:
+        engine.run()
+    except Exception as exc:
+        print(f"[WEB_UI] Engine polling stopped: {exc}")
+
+
+threading.Thread(target=_start_engine_polling, daemon=True).start()
 
 
 @app.route("/")
 def index():
     return render_template_string(HTML, remaining=engine.remaining)
+
+
+@app.route("/health")
+def health():
+    return {"status": "ok", "remaining": engine.remaining}
+
+
+@app.route("/state")
+def state():
+    return {"remaining": engine.remaining, "throw_index": engine.throw_index}
 
 
 @app.route("/set_remaining", methods=["POST"])
@@ -136,5 +177,6 @@ def reset():
 
 
 if __name__ == "__main__":
-    # näkyy puhelimelle samassa verkossa
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    host = os.getenv("DARTS_UI_HOST", "0.0.0.0")
+    port = int(os.getenv("DARTS_UI_PORT", "5000"))
+    app.run(host=host, port=port, debug=False)

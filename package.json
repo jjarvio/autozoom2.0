@@ -1,0 +1,28 @@
+{
+  "name": "autozoom-desktop",
+  "version": "0.1.0",
+  "description": "Electron desktop shell for the Darts Control UI",
+  "main": "electron/main.js",
+  "scripts": {
+    "desktop:start": "electron .",
+    "desktop:build": "electron-builder --dir",
+    "desktop:dist": "electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^31.0.2",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "fi.autozoom.dartscontrol",
+    "productName": "Darts Control",
+    "files": [
+      "electron/**/*",
+      "*.py",
+      "config.yaml",
+      "templates/**/*"
+    ],
+    "extraMetadata": {
+      "main": "electron/main.js"
+    }
+  }
+}
