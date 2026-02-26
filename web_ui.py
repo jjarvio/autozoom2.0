@@ -71,7 +71,7 @@ button.reset {
 <body>
 <div class="container">
 
-    <h1>Remaining: {{ remaining }}</h1>
+    <h1>Remaining: <span id="remaining">{{ remaining }}</span></h1>
 
     <div class="section">
         <form method="post" action="/set_remaining">
@@ -104,6 +104,26 @@ button.reset {
     </div>
 
 </div>
+
+<script>
+async function refreshState() {
+    try {
+        const response = await fetch('/state', { cache: 'no-store' });
+        if (!response.ok) return;
+        const data = await response.json();
+        const remainingEl = document.getElementById('remaining');
+        if (remainingEl && typeof data.remaining === 'number') {
+            remainingEl.textContent = data.remaining;
+        }
+    } catch (_) {
+        // no-op: keep previous value
+    }
+}
+
+setInterval(refreshState, 400);
+refreshState();
+</script>
+
 </body>
 </html>
 """
@@ -126,6 +146,11 @@ def index():
 @app.route("/health")
 def health():
     return {"status": "ok", "remaining": engine.remaining}
+
+
+@app.route("/state")
+def state():
+    return {"remaining": engine.remaining, "throw_index": engine.throw_index}
 
 
 @app.route("/set_remaining", methods=["POST"])
