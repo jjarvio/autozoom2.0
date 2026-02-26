@@ -1,0 +1,14 @@
+# =========================
+# ENGINE
+# =========================
+engine = DartsEngine(mode=DartsEngine.MODE_TEST)
+
+#testmode
+engine = DartsEngine(mode=DartsEngine.MODE_TEST)
+
+
+Hotkeys: 
+
+    Gtrl+Z: undo last throw
+    Gtrl+R: Reset turn
+    Gtrl+L: Reset leg

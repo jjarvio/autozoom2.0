@@ -1,0 +1,32 @@
+mode:
+  test: true   # tärkeä: UI / TEST-mode
+
+game:
+  start_score: 301   # vaihda 301 / 701 jne.
+  auto_reset_on_win: true
+
+
+obs:
+  host: "localhost"
+  port: 4455
+  password: "mysecret"
+
+  scenes:
+    wide: "darts"
+    t20: "darts20"
+    t20_first: "darts20_1"
+
+  text_sources:
+    checkout: "checkout_text"
+
+zoom:
+  t20_reset_delay: 4.0
+  checkout_reset_delay: 4.0
+
+replay:
+  enabled: false
+  cooldown: 5.0
+
+autodarts:
+  api_url: "http://192.168.1.9:3180/api/state"
+  poll_interval: 0.2

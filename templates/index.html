@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <title>Darts Dashboard</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 12px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0f0f0f;
+            color: #f0f0f0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .card {
+            background: #1a1a1a;
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 14px;
+        }
+
+        /* ===== STATUS ===== */
+        .status {
+            text-align: center;
+        }
+
+        .remaining {
+            font-size: 56px;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+
+        .checkout {
+            font-size: 16px;
+            margin-top: 4px;
+            color: #aaa;
+        }
+
+        .checkout.active {
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        .scene {
+            font-size: 14px;
+            color: #777;
+            margin-top: 6px;
+        }
+
+        /* ===== INPUT BASE ===== */
+        .input-wrap {
+            display: flex;
+            justify-content: center;
+        }
+
+        input {
+            font-size: 32px;
+            padding: 10px 12px;
+            text-align: center;
+            border-radius: 12px;
+            border: none;
+            outline: none;
+            background: #2a2a2a;
+            color: #fff;
+
+            /* estää mobiili/desktop kummallisuuksia */
+            pointer-events: auto;
+        }
+
+        input:focus {
+            outline: 2px solid #2196f3;
+        }
+
+        /* Poista number inputin nuolet */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        /* ===== PRESETS ===== */
+        .presets .preset-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+
+        .presets button {
+            font-size: 22px;
+            padding: 14px 0;
+            border-radius: 14px;
+            border: none;
+            background: #333;
+            color: #fff;
+        }
+
+        .presets button:active {
+            background: #2196f3;
+        }
+
+        /* ===== SET REMAINING ===== */
+        .set-remaining input {
+            width: 80%;
+            max-width: 240px;
+            margin-bottom: 12px;
+            font-size: 44px;
+        }
+
+        .set-remaining button {
+            width: 100%;
+            font-size: 26px;
+            padding: 14px;
+            border-radius: 14px;
+            border: none;
+            background: #2196f3;
+            color: white;
+        }
+
+        /* ===== ACTION BUTTONS ===== */
+        .actions button {
+            width: 100%;
+            font-size: 22px;
+            padding: 14px;
+            border-radius: 14px;
+            border: none;
+            background: #b71c1c;
+            color: white;
+        }
+
+        /* ===== THROW ===== */
+        .throw input {
+            width: 85%;
+            max-width: 260px;
+            margin-bottom: 10px;
+            font-size: 26px;
+        }
+
+        .throw button {
+            width: 100%;
+            font-size: 22px;
+            padding: 14px;
+            border-radius: 14px;
+            border: none;
+            background: #444;
+            color: white;
+        }
+
+        /* ===== Desktop hover fix ===== */
+        @media (hover: hover) {
+            input:hover {
+                background: #333;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<h1>Darts Dashboard</h1>
+
+<!-- STATUS -->
+<div class="card status">
+    <div>Remaining</div>
+    <div class="remaining">{{ remaining }}</div>
+
+    <div class="checkout {% if checkout_active %}active{% endif %}">
+        Checkout: {{ "YES" if checkout_active else "NO" }}
+    </div>
+
+    <div class="scene">
+        Scene: {{ scene }}
+    </div>
+</div>
+
+
+<!-- PRESETS -->
+<div class="card presets">
+    <form action="/set_remaining" method="post">
+        <div class="preset-grid">
+            <button name="value" value="501">501</button>
+            <button name="value" value="301">301</button>
+            <button name="value" value="170">170</button>
+            <button name="value" value="60">60</button>
+            <button name="value" value="31">31</button>
+        </div>
+    </form>
+</div>
+
+<div class="card set-remaining">
+    <form action="/set_remaining" method="post">
+        <div class="input-wrap">
+            <input
+                name="value"
+                type="number"
+                inputmode="numeric"
+                placeholder="SET SCORE"
+                autocomplete="off"
+            >
+        </div>
+        <button type="submit">SET REMAINING</button>
+    </form>
+</div>
+
+<!-- RESET -->
+<div class="card actions">
+    <form action="/reset_leg" method="post">
+        <button type="submit">RESET LEG</button>
+    </form>
+</div>
+
+<!-- THROW -->
+<div class="card throw">
+    <form action="/throw" method="post">
+        <div class="input-wrap">
+            <input
+                name="value"
+                placeholder="THROW (T20, D16, 20)"
+                autocapitalize="characters"
+                autocomplete="off"
+            >
+        </div>
+        <button type="submit">THROW</button>
+    </form>
+</div>
+
+</body>
+</html>
