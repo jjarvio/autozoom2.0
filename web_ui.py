@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, redirect, url_for, render_template_string
 from darts_engine import DartsEngine
 
@@ -112,6 +113,11 @@ def index():
     return render_template_string(HTML, remaining=engine.remaining)
 
 
+@app.route("/health")
+def health():
+    return {"status": "ok", "remaining": engine.remaining}
+
+
 @app.route("/set_remaining", methods=["POST"])
 def set_remaining():
     try:
@@ -136,5 +142,6 @@ def reset():
 
 
 if __name__ == "__main__":
-    # näkyy puhelimelle samassa verkossa
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    host = os.getenv("DARTS_UI_HOST", "0.0.0.0")
+    port = int(os.getenv("DARTS_UI_PORT", "5000"))
+    app.run(host=host, port=port, debug=False)
