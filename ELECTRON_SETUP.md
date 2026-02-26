@@ -49,7 +49,11 @@ Tämä luo jaettavan asennuspaketin `dist/`-kansioon.
 
 ## Huomiot
 
-- Jos Python-tulkki ei löydy automaattisesti, määritä ympäristömuuttuja:
+- Electron yrittää ensin käyttää paikallista virtuaaliympäristöä automaattisesti:
+  - Windows: `venv\Scripts\python.exe`
+  - Linux/macOS: `venv/bin/python3`
+- Jos haluat silti pakottaa Pythonin, aseta `PYTHON_BIN` ympäristömuuttujaan:
   - Linux/macOS: `PYTHON_BIN=python3 npm run desktop:start`
-  - Windows: `set PYTHON_BIN=python && npm run desktop:start`
+  - Windows CMD: `set PYTHON_BIN=C:\\polku\\python.exe && npm run desktop:start`
+  - Windows PowerShell: `$env:PYTHON_BIN="C:\\polku\\python.exe"; npm run desktop:start`
 - Flaskin portti voidaan vaihtaa ympäristömuuttujalla `DARTS_UI_PORT`.
