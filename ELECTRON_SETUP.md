@@ -8,13 +8,27 @@ Tässä projektissa käyttöliittymä pysyy Flask-pohjaisena (`web_ui.py`), mutt
 python3 -m pip install flask pyyaml requests obs-websocket-py
 ```
 
-## 2) Asenna Node-riippuvuudet
+## 2) Tarkista API-osoite ja mode
+
+`config.yaml` määrää mistä AutoDarts-tila luetaan. Varmista ainakin:
+
+```yaml
+mode:
+  test: false
+
+autodarts:
+  api_url: "http://192.168.1.50:3180/api/state"
+```
+
+Kun `test: false`, engine pollaa API:a ja vähentää pisteet automaattisesti heittojen perusteella.
+
+## 3) Asenna Node-riippuvuudet
 
 ```bash
 npm install
 ```
 
-## 3) Käynnistä työpöytäsovellus
+## 4) Käynnistä työpöytäsovellus
 
 ```bash
 npm run desktop:start
@@ -25,7 +39,7 @@ Electron tekee seuraavat asiat automaattisesti:
 - odottaa `/health`-päätepisteen vastausta
 - avaa käyttöliittymän työpöytäikkunaan
 
-## 4) Rakenna paketti
+## 5) Rakenna paketti
 
 ```bash
 npm run desktop:dist

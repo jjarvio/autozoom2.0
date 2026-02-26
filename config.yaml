@@ -1,5 +1,5 @@
 mode:
-  test: true   # tärkeä: UI / TEST-mode
+  test: false   # false = käytä AutoDarts API:a
 
 game:
   start_score: 301   # vaihda 301 / 701 jne.
@@ -28,5 +28,5 @@ replay:
   cooldown: 5.0
 
 autodarts:
-  api_url: "http://192.168.1.9:3180/api/state"
+  api_url: "http://192.168.1.50:3180/api/state"
   poll_interval: 0.2

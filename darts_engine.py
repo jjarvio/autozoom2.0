@@ -489,9 +489,6 @@ class DartsEngine:
     # TEST MODE
     # =========================
     def manual_throw(self, segment):
-        if self.mode != self.MODE_TEST:
-            return
-
         with self._lock:
             if self.throw_index == 0:
                 self.turn_start_remaining = self.remaining

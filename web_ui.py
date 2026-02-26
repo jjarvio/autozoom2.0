@@ -1,9 +1,10 @@
 import os
+import threading
 from flask import Flask, request, redirect, url_for, render_template_string
 from darts_engine import DartsEngine
 
 app = Flask(__name__)
-engine = DartsEngine(mode=DartsEngine.MODE_TEST)
+engine = DartsEngine()
 
 HTML = """
 <!doctype html>
@@ -106,6 +107,15 @@ button.reset {
 </body>
 </html>
 """
+
+def _start_engine_polling():
+    try:
+        engine.run()
+    except Exception as exc:
+        print(f"[WEB_UI] Engine polling stopped: {exc}")
+
+
+threading.Thread(target=_start_engine_polling, daemon=True).start()
 
 
 @app.route("/")
